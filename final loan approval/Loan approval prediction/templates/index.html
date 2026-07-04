@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Loan Approval System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white rounded p-5 mb-5">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-university"></i> Loan Approval Prediction System
+                </h1>
+                <p class="lead mb-4">
+                    Get instant loan approval predictions using advanced machine learning algorithms. 
+                    Our system analyzes your financial profile to provide accurate and fast loan decisions.
+                </p>
+                {% if not session.user_id %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg me-md-2">
+                        <i class="fas fa-user-plus"></i> Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+                {% else %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{{ url_for('dashboard') if not session.is_admin else url_for('admin_dashboard') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-robot fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">AI-Powered Predictions</h5>
+                <p class="card-text">
+                    Advanced machine learning algorithms analyze your financial data to provide accurate loan approval predictions with confidence scores.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-shield-alt fa-3x text-success"></i>
+                </div>
+                <h5 class="card-title">Secure & Private</h5>
+                <p class="card-text">
+                    Your data is protected with industry-standard encryption and secure authentication. We prioritize your privacy and data security.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-clock fa-3x text-info"></i>
+                </div>
+                <h5 class="card-title">Instant Results</h5>
+                <p class="card-text">
+                    Get immediate loan approval predictions without the long waiting periods associated with traditional loan applications.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0"><i class="fas fa-info-circle"></i> How It Works</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">1</div>
+                        <h6>Create Account</h6>
+                        <p class="text-muted">Sign up with your details to get started with our loan approval system.</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">2</div>
+                        <h6>Fill Application</h6>
+                        <p class="text-muted">Complete the comprehensive loan application form with your financial information.</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">3</div>
+                        <h6>Get Prediction</h6>
+                        <p class="text-muted">Our AI model instantly analyzes your data and provides a loan approval prediction.</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-4">
+                        <div class="step-number">4</div>
+                        <h6>Track Status</h6>
+                        <p class="text-muted">Monitor your application history and prediction results in your dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Key Features</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Real-time Processing:</strong> Instant predictions without delay
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Comprehensive Analysis:</strong> Multiple factors considered for accurate predictions
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>User Dashboard:</strong> Track all your applications in one place
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Admin Panel:</strong> Complete system management for administrators
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Mobile Responsive:</strong> Access the system from any device
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Why Choose Us</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <strong>High Accuracy:</strong> Advanced ML models ensure reliable predictions
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <strong>Easy to Use:</strong> Simple and intuitive interface for all users
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <strong>Transparent Process:</strong> Clear insight into prediction factors
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <strong>Secure Platform:</strong> Bank-level security for your data
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <strong>24/7 Access:</strong> Available anytime, anywhere
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow bg-light">
+            <div class="card-body text-center">
+                <h5 class="card-title">Ready to Get Started?</h5>
+                <p class="card-text">
+                    Join thousands of users who have already benefited from our intelligent loan approval system.
+                </p>
+                {% if not session.user_id %}
+                <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket"></i> Start Your Application Now
+                </a>
+                {% else %}
+                <a href="{{ url_for('dashboard') if not session.is_admin else url_for('admin_dashboard') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.jumbotron {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.feature-icon {
+    padding: 20px;
+    border-radius: 50%;
+    background: rgba(0, 123, 255, 0.1);
+    display: inline-block;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 15px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+.feature-icon:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+</style>
+{% endblock %}

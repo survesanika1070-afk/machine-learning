@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Loan Approval System{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                <p class="mb-0">Manage users and monitor loan applications</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <span class="admin-badge"><i class="fas fa-user-shield"></i> Administrator</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-grid">
+        <div class="stats-card primary">
+            <div class="stats-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>{{ users|length }}</h3>
+            <p>Total Users</p>
+        </div>
+        <div class="stats-card success">
+            <div class="stats-icon">
+                <i class="fas fa-file-contract"></i>
+            </div>
+            <h3>{{ applications|length }}</h3>
+            <p>Total Applications</p>
+        </div>
+        <div class="stats-card info">
+            <div class="stats-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>{{ applications|selectattr('prediction_result', 'equalto', 'Approved')|list|length }}</h3>
+            <p>Approved Loans</p>
+        </div>
+        <div class="stats-card warning">
+            <div class="stats-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h3>{{ applications|selectattr('prediction_result', 'equalto', 'Not Approved')|list|length }}</h3>
+            <p>Rejected Loans</p>
+        </div>
+    </div>
+
+    <div class="admin-controls">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control search-input" data-table="users-table" placeholder="Search users...">
+                </div>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-export" data-table="users-table" data-format="csv">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button class="btn btn-outline-success btn-export" data-table="users-table" data-format="excel">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </button>
+                    <button class="btn btn-danger btn-export" data-table="users-table" data-format="pdf">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="search-results" class="mt-2 text-muted small"></div>
+    </div>
+
+<div class="admin-tabs">
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">
+                    <i class="fas fa-users"></i> Users
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="applications-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab">
+                    <i class="fas fa-file-contract"></i> Applications
+                </button>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="tab-content" id="adminTabsContent">
+        <div class="tab-pane fade show active" id="users" role="tabpanel">
+            <div class="admin-table-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-users"></i> Registered Users</h5>
+                    <span class="badge bg-primary">{{ users|length }} Users</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table admin-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable">ID <i class="fas fa-sort"></i></th>
+                                <th class="sortable">Username <i class="fas fa-sort"></i></th>
+                                <th class="sortable">Email <i class="fas fa-sort"></i></th>
+                                <th>Role</th>
+                                <th class="sortable">Applications <i class="fas fa-sort"></i></th>
+                                <th class="sortable">Joined <i class="fas fa-sort"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td><strong>{{ user.id }}</strong></td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% if user.is_admin %}
+                                        <span class="role-badge admin">Admin</span>
+                                    {% else %}
+                                        <span class="role-badge user">User</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.loan_applications|length }}</td>
+                                <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" data-user-id="{{ user.id }}" data-bs-toggle="tooltip" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-action btn-edit" data-id="{{ user.id }}" data-type="user" data-bs-toggle="tooltip" title="Edit User">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        {% if not user.is_admin %}
+                                        <button class="btn-action btn-delete" data-id="{{ user.id }}" data-type="user" data-bs-toggle="tooltip" title="Delete User">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-pane fade" id="applications" role="tabpanel">
+            <div class="admin-table-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-file-contract"></i> Loan Applications</h5>
+                    <span class="badge bg-success">{{ applications|length }} Applications</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table admin-table" id="applications-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable">ID <i class="fas fa-sort"></i></th>
+                                <th class="sortable">User <i class="fas fa-sort"></i></th>
+                                <th class="sortable">Name <i class="fas fa-sort"></i></th>
+                                <th class="sortable">Amount <i class="fas fa-sort"></i></th>
+                                <th>Term</th>
+                                <th class="sortable">Income <i class="fas fa-sort"></i></th>
+                                <th class="sortable">Credit <i class="fas fa-sort"></i></th>
+                                <th>Status</th>
+                                <th>Score</th>
+                                <th class="sortable">Date <i class="fas fa-sort"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td><strong>{{ app.id }}</strong></td>
+                                <td>{{ app.user.username }}</td>
+                                <td>{{ app.name }}</td>
+                                <td>${{ "%.0f"|format(app.loan_amount) }}</td>
+                                <td>{{ app.loan_term }}m</td>
+                                <td>${{ "%.0f"|format(app.income) }}</td>
+                                <td>{{ app.credit_history }}</td>
+                                <td>
+                                    {% if app.prediction_result == 'Approved' %}
+                                        <span class="status-badge approved">{{ app.prediction_result }}</span>
+                                    {% else %}
+                                        <span class="status-badge rejected">{{ app.prediction_result }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if app.prediction_score %}
+                                        <div class="progress-custom">
+                                            <div class="progress-bar-custom" role="progressbar" 
+                                                 style="width: {{ (app.prediction_score * 100)|round }}%">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">{{ "%.1f%%"|format(app.prediction_score * 100) }}</small>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ app.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" data-application-id="{{ app.id }}" data-bs-toggle="tooltip" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-action btn-edit" data-id="{{ app.id }}" data-type="application" data-bs-toggle="tooltip" title="Edit Application">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action btn-delete" data-id="{{ app.id }}" data-type="application" data-bs-toggle="tooltip" title="Delete Application">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+</script>
+{% endblock %}
